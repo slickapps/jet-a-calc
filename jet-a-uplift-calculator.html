@@ -23,7 +23,7 @@
     .eyebrow { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.35rem; }
     h1 { font-family: var(--sans); font-weight: 600; font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem; }
     .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; }
-    .field-label { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .field-label { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.5rem; }
     .selector-section { margin-bottom: 1.75rem; }
     .type-row, .sg-row { display: flex; gap: 0.5rem; }
     .type-row { margin-bottom: 0.75rem; }
@@ -53,8 +53,8 @@
     .result-box .box-val { font-family: var(--mono); font-size: 2.2rem; color: var(--text); letter-spacing: -0.01em; line-height: 1; }
     .result-box.negative .box-val { color: var(--red); }
     .result-box.green .box-val { color: var(--green); }
-    .result-box .box-unit { font-family: var(--mono); font-size: 1rem; color: var(--muted); }
-    .result-box.green .box-unit { color: var(--green-dim); }
+    .result-box .box-unit { font-family: var(--mono); font-size: 1.4rem; color: var(--muted); }
+    .result-box.green .box-unit { color: #3a9e6e; }
     .note { max-width: 420px; margin: 0.5rem auto 0; font-size: 0.68rem; color: var(--muted); line-height: 1.6; text-align: center; }
   </style>
 </head>
@@ -103,7 +103,7 @@
     <hr class="divider" />
 
     <div class="field-group">
-      <div class="field-label">Total Fuel Load Needed on Aircraft (lbs)</div>
+      <div class="field-label">Total Fuel Needed on Aircraft<br>(lbs)</div>
       <div class="input-row">
         <input type="number" id="target" placeholder="0" min="0" step="any" oninput="calcPlan()" />
         <div class="unit-badge">LBS</div>
@@ -111,7 +111,7 @@
     </div>
 
     <div class="field-group">
-      <div class="field-label">Fuel Already On Board (lbs)</div>
+      <div class="field-label">Fuel Already On Board<br>(lbs)</div>
       <div class="input-row">
         <input type="number" id="onboard" placeholder="0" min="0" step="any" oninput="calcPlan()" />
         <div class="unit-badge">LBS</div>
@@ -124,7 +124,7 @@
       <div class="box-label">Uplift in Liters</div>
       <div class="box-row">
         <div class="box-val" id="upliftLiters">--</div>
-        <div class="box-unit">L</div>
+        <div class="box-unit">LTRS</div>
       </div>
     </div>
 
@@ -140,7 +140,7 @@
       <div class="box-label">Uplift in US Gallons</div>
       <div class="box-row">
         <div class="box-val" id="upliftGallons">--</div>
-        <div class="box-unit">US GAL</div>
+        <div class="box-unit">US GALS</div>
       </div>
     </div>
   </div>
