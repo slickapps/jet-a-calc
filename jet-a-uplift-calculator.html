@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jet-A Fuel Converter</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0f14; --panel: #13161e; --border: #1e2330;
+      --accent: #f5a623; --accent-dim: #7a5212;
+      --green: #3ecf8e; --green-dim: #1a5c3e;
+      --red: #e55353; --text: #d4dae8; --muted: #8a9ab0;
+      --mono: 'Share Tech Mono', monospace; --sans: 'Inter', sans-serif;
+    }
+    html, body { overflow-x: hidden; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); display: block; padding: 2rem 1rem 3rem; text-align: center; }
+    .runway { display: flex; gap: 6px; justify-content: center; margin-bottom: 2.5rem; margin-top: 1rem; }
+    .runway span { display: block; width: 32px; height: 4px; background: var(--accent); opacity: 0.85; border-radius: 2px; }
+    .runway span:nth-child(even) { opacity: 0.3; }
+    .plan-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; width: 100%; max-width: 420px; padding: 2rem 2rem 2.5rem; margin: 0 auto 1rem auto; text-align: left; }
+    .eyebrow { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.35rem; }
+    h1 { font-family: var(--sans); font-weight: 600; font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem; }
+    .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; }
+    .field-label { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .selector-section { margin-bottom: 1.75rem; }
+    .type-row, .sg-row { display: flex; gap: 0.5rem; }
+    .type-row { margin-bottom: 0.75rem; }
+    .sg-row { margin-bottom: 0; }
+    .type-btn { flex: 1; background: #0d0f14; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 0.5rem; cursor: pointer; text-align: center; font-family: var(--mono); color: var(--muted); font-size: 1.1rem; font-weight: 600; letter-spacing: 0.06em; }
+    .type-btn.active { border-color: var(--accent); background: #1c1608; color: var(--accent); }
+    .sg-btn { flex: 1; background: #0d0f14; border: 1px solid var(--border); border-radius: 3px; padding: 0.65rem 0.4rem; cursor: pointer; text-align: center; font-family: var(--mono); color: var(--muted); font-size: 1rem; line-height: 1.5; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .sg-btn.active { border-color: var(--accent); background: #1c1608; color: var(--accent); }
+    .sg-btn .sg-label { font-size: 1rem; font-weight: 600; }
+    .sg-btn .sg-val { font-size: 0.95rem; }
+    .sg-btn .sg-temp { font-size: 0.8rem; margin-top: 0.15rem; opacity: 0.8; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.75rem 0; }
+    .input-row { display: flex; align-items: stretch; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; transition: border-color 0.15s; }
+    .input-row:focus-within { border-color: var(--accent); }
+    .input-row input[type="number"] { flex: 1; background: #0d0f14; border: none; outline: none; font-family: var(--mono); font-size: 1.8rem; color: #fff; padding: 0.85rem 1rem; -moz-appearance: textfield; }
+    .input-row input::-webkit-outer-spin-button,
+    .input-row input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .unit-badge { background: #191d27; border-left: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: center; font-family: var(--mono); font-size: 1rem; color: var(--muted); letter-spacing: 0.1em; white-space: nowrap; }
+    .field-group { display: flex; flex-direction: column; margin-bottom: 1.75rem; }
+    .field-group .field-label { margin-bottom: 0.5rem; }
+    .result-box { border-radius: 3px; padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; border: 1px solid var(--border); background: #0d0f14; }
+    .result-box.negative { border-color: var(--red); background: #1e0d0d; }
+    .result-box.green { border-color: var(--green); background: #0b1e16; }
+    .result-box .box-label { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .result-box.negative .box-label { color: var(--red); }
+    .result-box .box-row { display: flex; align-items: baseline; gap: 0.5rem; }
+    .result-box .box-val { font-family: var(--mono); font-size: 2.2rem; color: var(--text); letter-spacing: -0.01em; line-height: 1; }
+    .result-box.negative .box-val { color: var(--red); }
+    .result-box.green .box-val { color: var(--green); }
+    .result-box .box-unit { font-family: var(--mono); font-size: 1rem; color: var(--muted); }
+    .result-box.green .box-unit { color: var(--green-dim); }
+    .note { max-width: 420px; margin: 0.5rem auto 0; font-size: 0.68rem; color: var(--muted); line-height: 1.6; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="runway">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="plan-card">
+    <div class="eyebrow">Aviation Fuel</div>
+    <h1>Jet-A Uplift Calculator</h1>
+    <p class="subtitle">Enter weights to calculate your uplift</p>
+
+    <div class="selector-section">
+      <div class="field-label">Fuel Type</div>
+      <div class="type-row">
+        <button class="type-btn active" id="btnJetA" onclick="setType('jeta')">Jet-A</button>
+        <button class="type-btn" id="btnJetA1" onclick="setType('jeta1')">Jet-A1</button>
+      </div>
+
+      <div class="field-label">Fuel Temperature</div>
+      <div class="sg-row">
+        <button class="sg-btn" id="sgCold" onclick="setSg(0)">
+          <div class="sg-label">Cold</div>
+          <div class="sg-val" id="sgColdVal">SG 0.818</div>
+          <div class="sg-temp">Below 0C (32F)</div>
+        </button>
+        <button class="sg-btn active" id="sgStd" onclick="setSg(1)">
+          <div class="sg-label">Std</div>
+          <div class="sg-val" id="sgStdVal">SG 0.800</div>
+          <div class="sg-temp">Standard 15C (59F)</div>
+        </button>
+        <button class="sg-btn" id="sgHot" onclick="setSg(2)">
+          <div class="sg-label">Hot</div>
+          <div class="sg-val" id="sgHotVal">SG 0.778</div>
+          <div class="sg-temp">Above 30C (86F)</div>
+        </button>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="field-group">
+      <div class="field-label">Total Fuel Needed on Aircraft</div>
+      <div class="input-row">
+        <input type="number" id="target" placeholder="0" min="0" step="any" oninput="calcPlan()" />
+        <div class="unit-badge">LBS</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Fuel Already On Board</div>
+      <div class="input-row">
+        <input type="number" id="onboard" placeholder="0" min="0" step="any" oninput="calcPlan()" />
+        <div class="unit-badge">LBS</div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="result-box green">
+      <div class="box-label">Uplift in Liters</div>
+      <div class="box-row">
+        <div class="box-val" id="upliftLiters">--</div>
+        <div class="box-unit">L</div>
+      </div>
+    </div>
+
+    <div class="result-box" id="lbsBox">
+      <div class="box-label" id="lbsLabel">Uplift in Pounds</div>
+      <div class="box-row">
+        <div class="box-val" id="addLbs">--</div>
+        <div class="box-unit">LBS</div>
+      </div>
+    </div>
+
+    <div class="result-box" style="margin-bottom:0;">
+      <div class="box-label">Uplift in US Gallons</div>
+      <div class="box-row">
+        <div class="box-val" id="upliftGallons">--</div>
+        <div class="box-unit">US GAL</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">
+    Density = SG x 1 kg/L &nbsp; 1 lb = 0.453592 kg<br>
+    Results are approximate -- verify with flight manual data.
+  </p>
+
+  <script>
+    var FUELS = {
+      jeta:  [0.818, 0.800, 0.778],
+      jeta1: [0.824, 0.804, 0.783]
+    };
+    var currentType = 'jeta';
+    var currentIdx  = 1;
+    var sg = FUELS[currentType][currentIdx];
+    var MAX_FUEL = 19850;
+
+    function setType(type) {
+      currentType = type;
+      document.getElementById('btnJetA').className  = 'type-btn' + (type === 'jeta'  ? ' active' : '');
+      document.getElementById('btnJetA1').className = 'type-btn' + (type === 'jeta1' ? ' active' : '');
+      var vals = FUELS[type];
+      document.getElementById('sgColdVal').textContent = 'SG ' + vals[0].toFixed(3);
+      document.getElementById('sgStdVal').textContent  = 'SG ' + vals[1].toFixed(3);
+      document.getElementById('sgHotVal').textContent  = 'SG ' + vals[2].toFixed(3);
+      sg = vals[currentIdx];
+      calcPlan();
+    }
+
+    function setSg(idx) {
+      currentIdx = idx;
+      document.getElementById('sgCold').className = 'sg-btn' + (idx === 0 ? ' active' : '');
+      document.getElementById('sgStd').className  = 'sg-btn' + (idx === 1 ? ' active' : '');
+      document.getElementById('sgHot').className  = 'sg-btn' + (idx === 2 ? ' active' : '');
+      sg = FUELS[currentType][idx];
+      calcPlan();
+    }
+
+    function fmt(n) {
+      if (n === null || !isFinite(n)) return '--';
+      return Math.ceil(n).toLocaleString('en-US');
+    }
+
+    function calcPlan() {
+      var target  = parseFloat(document.getElementById('target').value);
+      var onboard = parseFloat(document.getElementById('onboard').value);
+      var lbsBox  = document.getElementById('lbsBox');
+      var lbsLabel = document.getElementById('lbsLabel');
+      var addLbs  = document.getElementById('addLbs');
+      var liters  = document.getElementById('upliftLiters');
+      var gallons = document.getElementById('upliftGallons');
+
+      if (!isFinite(target) || !isFinite(onboard) || target < 0 || onboard < 0) {
+        lbsBox.className = 'result-box';
+        lbsLabel.textContent = 'Uplift in Pounds';
+        addLbs.textContent = '--';
+        liters.textContent = '--';
+        gallons.textContent = '--';
+        return;
+      }
+
+      if (target > MAX_FUEL) {
+        lbsBox.className = 'result-box negative';
+        lbsLabel.textContent = 'Exceeds Max Fuel (19,850 LBS)';
+        addLbs.textContent = '+' + fmt(target - MAX_FUEL);
+        liters.textContent = '--';
+        gallons.textContent = '--';
+        return;
+      }
+
+      var delta = target - onboard;
+      lbsBox.className = 'result-box' + (delta < 0 ? ' negative' : '');
+      lbsLabel.textContent = delta < 0 ? 'Over by' : 'Uplift in Pounds';
+      addLbs.textContent = fmt(Math.abs(delta));
+
+      if (delta > 0) {
+        var upliftL = (delta * 0.453592) / sg;
+        liters.textContent  = fmt(upliftL);
+        gallons.textContent = fmt(upliftL / 3.785411784);
+      } else {
+        liters.textContent  = delta === 0 ? '0' : '--';
+        gallons.textContent = delta === 0 ? '0' : '--';
+      }
+    }
+  </script>
+</body>
+</html>
