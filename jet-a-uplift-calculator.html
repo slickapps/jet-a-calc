@@ -34,8 +34,8 @@
     .sg-btn.active { border-color: var(--accent); background: #1c1608; color: var(--accent); }
     .sg-btn .sg-label { font-size: 1rem; font-weight: 600; }
     .sg-btn .sg-val { font-size: 0.95rem; }
-    .sg-btn .sg-temp { font-size: 0.8rem; margin-top: 0.15rem; opacity: 0.8; }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 1.75rem 0; }
+    .sg-btn .sg-temp { font-size: 0.95rem; margin-top: 0.15rem; opacity: 0.8; }
+    .divider { border: none; border-top: 1px solid #2e3a4a; margin: 1.75rem 0; }
     .input-row { display: flex; align-items: stretch; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; transition: border-color 0.15s; }
     .input-row:focus-within { border-color: var(--accent); }
     .input-row input[type="number"] { flex: 1; background: #0d0f14; border: none; outline: none; font-family: var(--mono); font-size: 1.8rem; color: #fff; padding: 0.85rem 1rem; -moz-appearance: textfield; }
@@ -72,7 +72,7 @@
 
     <div class="selector-section">
       <div class="field-label">Fuel Type</div>
-      <div class="type-row">
+      <div class="type-row" style="margin-bottom:1.75rem;">
         <button class="type-btn active" id="btnJetA" onclick="setType('jeta')">Jet-A</button>
         <button class="type-btn" id="btnJetA1" onclick="setType('jeta1')">Jet-A1</button>
       </div>
@@ -81,18 +81,21 @@
       <div class="sg-row">
         <button class="sg-btn" id="sgCold" onclick="setSg(0)">
           <div class="sg-label">Cold</div>
-          <div class="sg-val" id="sgColdVal">SG 0.818</div>
           <div class="sg-temp">Below 0C (32F)</div>
+          <hr style="border:none;border-top:1px solid #2e3545;width:80%;margin:0.3rem auto;">
+          <div class="sg-val" id="sgColdVal">SG 0.818</div>
         </button>
         <button class="sg-btn active" id="sgStd" onclick="setSg(1)">
           <div class="sg-label">Std</div>
-          <div class="sg-val" id="sgStdVal">SG 0.800</div>
           <div class="sg-temp">Standard 15C (59F)</div>
+          <hr style="border:none;border-top:1px solid #2e3545;width:80%;margin:0.3rem auto;">
+          <div class="sg-val" id="sgStdVal">SG 0.800</div>
         </button>
         <button class="sg-btn" id="sgHot" onclick="setSg(2)">
           <div class="sg-label">Hot</div>
-          <div class="sg-val" id="sgHotVal">SG 0.778</div>
           <div class="sg-temp">Above 30C (86F)</div>
+          <hr style="border:none;border-top:1px solid #2e3545;width:80%;margin:0.3rem auto;">
+          <div class="sg-val" id="sgHotVal">SG 0.778</div>
         </button>
       </div>
     </div>
@@ -100,7 +103,7 @@
     <hr class="divider" />
 
     <div class="field-group">
-      <div class="field-label">Total Fuel Needed on Aircraft</div>
+      <div class="field-label">Total Fuel Load Needed on Aircraft (lbs)</div>
       <div class="input-row">
         <input type="number" id="target" placeholder="0" min="0" step="any" oninput="calcPlan()" />
         <div class="unit-badge">LBS</div>
@@ -108,7 +111,7 @@
     </div>
 
     <div class="field-group">
-      <div class="field-label">Fuel Already On Board</div>
+      <div class="field-label">Fuel Already On Board (lbs)</div>
       <div class="input-row">
         <input type="number" id="onboard" placeholder="0" min="0" step="any" oninput="calcPlan()" />
         <div class="unit-badge">LBS</div>
