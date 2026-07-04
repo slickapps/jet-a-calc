@@ -44,7 +44,7 @@
     .unit-badge { background: #191d27; border-left: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: center; font-family: var(--mono); font-size: 1rem; color: var(--muted); letter-spacing: 0.1em; white-space: nowrap; }
     .field-group { display: flex; flex-direction: column; margin-bottom: 1.75rem; }
     .field-group .field-label { margin-bottom: 0.5rem; }
-    .result-box { border-radius: 3px; padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; border: 1px solid var(--border); background: #0d0f14; cursor: grab; touch-action: none; }
+    .result-box { border-radius: 3px; padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; border: 1px solid var(--border); background: #0d0f14; cursor: grab; }
     .result-box.sortable-ghost { opacity: 0.3; }
     .result-box.sortable-chosen { border-color: var(--accent); }
     .result-box.negative { border-color: var(--red); background: #1e0d0d; }
@@ -237,8 +237,9 @@
       animation: 150,
       ghostClass: 'sortable-ghost',
       chosenClass: 'sortable-chosen',
-      delay: 100,
-      delayOnTouchOnly: true
+      delay: 400,
+      delayOnTouchOnly: true,
+      touchStartThreshold: 5
     });
   </script>
 </body>
