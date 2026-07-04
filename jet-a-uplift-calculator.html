@@ -49,7 +49,8 @@
     .result-box.sortable-chosen { border-color: var(--accent); }
     .result-box.negative { border-color: var(--red); background: #1e0d0d; }
     .result-box.green { border-color: var(--green); background: #0b1e16; }
-    .result-box .box-label { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .result-box .box-label { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+    .result-box .box-label::after { content: '⋮'; font-size: 1.2rem; opacity: 0.4; letter-spacing: -2px; }
     .result-box.negative .box-label { color: var(--red); }
     .result-box .box-row { display: flex; align-items: baseline; gap: 0.5rem; }
     .result-box .box-val { font-family: var(--mono); font-size: 2.2rem; color: var(--text); letter-spacing: -0.01em; line-height: 1; }
