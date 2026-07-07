@@ -26,21 +26,26 @@
     .runway span:nth-child(even) { opacity: 0.3; }
     .plan-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; width: 100%; max-width: 420px; padding: 2rem 2rem 2.5rem; margin: 0 auto 1rem auto; text-align: left; }
     .eyebrow { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.35rem; }
-    h1 { font-family: var(--sans); font-weight: 600; font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem; }
+    h1 { font-family: var(--sans); font-weight: 600; font-size: 1.6rem; color: #c8d0e0; margin-bottom: 0.25rem; }
     .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; }
     .field-label { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.5rem; }
     .selector-section { margin-bottom: 1.75rem; }
     .type-row, .sg-row { display: flex; gap: 0.5rem; }
     .type-row { margin-bottom: 0.75rem; }
-    .sg-row { margin-bottom: 0; }
+    .sg-row { margin-bottom: 0; flex-direction: column; }
     .type-btn { flex: 1; background: #0d0f14; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 0.5rem; cursor: pointer; text-align: center; font-family: var(--mono); color: var(--muted); font-size: 1.1rem; font-weight: 600; letter-spacing: 0.06em; }
     .type-btn.active { border-color: var(--accent); background: #1c1608; color: var(--accent); }
-    .sg-btn { flex: 1; background: #0d0f14; border: 1px solid var(--border); border-radius: 3px; padding: 0.65rem 0.4rem; cursor: pointer; text-align: center; font-family: var(--mono); color: var(--muted); font-size: 1rem; line-height: 1.5; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .sg-btn { width: 100%; background: #0d0f14; border: 1px solid var(--border); border-radius: 3px; padding: 0.65rem 0.1rem 0.65rem 0.1rem; cursor: pointer; font-family: var(--mono); color: var(--muted); display: flex; align-items: center; justify-content: space-between; white-space: nowrap; overflow: hidden; }
     .sg-btn.active { border-color: var(--accent); background: #1c1608; color: var(--accent); }
-    .sg-btn .sg-label { font-size: 1rem; font-weight: 600; }
-    .sg-btn .sg-val { font-size: 0.95rem; }
-    .sg-btn .sg-temp { font-size: 0.95rem; margin-top: 0.15rem; opacity: 0.8; font-weight: 600; }
-    .divider { border: none; border-top: 1px solid #2e3a4a; margin: 1.75rem 0; }
+    .sg-btn.sortable-ghost { opacity: 0.3; }
+    .sg-btn.sortable-chosen { border-color: var(--accent); }
+    .sg-btn .sg-left { min-width: 75px; width: 75px; }
+    .sg-btn .sg-right { display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; flex: 1; justify-content: space-between; }
+    .sg-btn .sg-temp { flex: 1; text-align: left; }
+    .sg-btn .sg-label { font-size: 1.2rem; font-weight: 600; width: 75px; display: block; }
+    .sg-btn .sg-temp { font-size: 1.2rem; font-weight: 600; flex: 1; text-align: left; }
+    .sg-btn .sg-val { font-size: 1.2rem; padding-right: 0.9rem; }
+    .divider { border: none; border-top: 1px solid #4a5a6a; margin: 1.75rem 0; }
     .input-row { display: flex; align-items: stretch; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; transition: border-color 0.15s; }
     .input-row.over-limit { border-color: var(--red); background: #1e0d0d; }
     .input-row input[type="number"] { flex: 1; background: #0d0f14; border: none; outline: none; font-family: var(--mono); font-size: 1.8rem; color: #fff; padding: 0.85rem 1rem; -moz-appearance: textfield; }
@@ -58,13 +63,13 @@
     .result-box .box-label::after { content: '⋮'; font-size: 1.2rem; opacity: 0.4; letter-spacing: -2px; }
     .result-box.negative .box-label { color: var(--red); }
     .result-box .box-row { display: flex; align-items: baseline; gap: 0.5rem; }
-    .result-box .box-val { font-family: var(--mono); font-size: 2.2rem; color: var(--text); letter-spacing: -0.01em; line-height: 1; }
+    .result-box .box-val { font-family: var(--mono); font-size: 1.9rem; color: var(--text); letter-spacing: -0.01em; line-height: 1; }
     .result-box.negative .box-unit { color: var(--red); }
     .result-box.negative .box-val { color: var(--red); }
     .result-box.green .box-val { color: var(--green); }
     .result-box .box-unit { font-family: var(--mono); font-size: 1.4rem; color: var(--muted); }
     .result-box.green .box-unit { color: #3a9e6e; }
-    .note { max-width: 420px; margin: 0.5rem auto 0; font-size: 0.68rem; color: var(--muted); line-height: 1.6; text-align: center; }
+    .note { max-width: 420px; margin: 0.5rem auto 0; font-size: 1.2rem; color: var(--muted); line-height: 1.6; text-align: center; }
   </style>
 </head>
 <body>
@@ -87,27 +92,33 @@
       </div>
 
       <div class="field-label">Fuel Temperature</div>
-      <div class="sg-row">
-        <button class="sg-btn" id="sgCold" onclick="setSg(0)">
-          <div class="sg-label">Cold</div>
-          <hr style="border:none;border-top:1px solid #4a5568;width:80%;margin:0.3rem auto;">
-          <div class="sg-temp">Below 0C (32F)</div>
-          <hr style="border:none;border-top:1px solid #4a5568;width:80%;margin:0.3rem auto;">
-          <div class="sg-val" id="sgColdVal">SG 0.818</div>
-        </button>
+      <div class="sg-row" id="sgContainer">
         <button class="sg-btn active" id="sgStd" onclick="setSg(1)">
-          <div class="sg-label">Std</div>
-          <hr style="border:none;border-top:1px solid #4a5568;width:80%;margin:0.3rem auto;">
-          <div class="sg-temp">Standard 15C (59F)</div>
-          <hr style="border:none;border-top:1px solid #4a5568;width:80%;margin:0.3rem auto;">
-          <div class="sg-val" id="sgStdVal">SG 0.800</div>
+          <div class="sg-left">
+            <div class="sg-label">Std&nbsp;</div>
+          </div>
+          <div class="sg-right">
+            <div class="sg-temp">15C (59F)</div>
+            <div class="sg-val" id="sgStdVal">SG 0.800</div>
+          </div>
+        </button>
+        <button class="sg-btn" id="sgCold" onclick="setSg(0)">
+          <div class="sg-left">
+            <div class="sg-label">Cold</div>
+          </div>
+          <div class="sg-right">
+            <div class="sg-temp">< 0C (32F)</div>
+            <div class="sg-val" id="sgColdVal">SG 0.818</div>
+          </div>
         </button>
         <button class="sg-btn" id="sgHot" onclick="setSg(2)">
-          <div class="sg-label">Hot</div>
-          <hr style="border:none;border-top:1px solid #4a5568;width:80%;margin:0.3rem auto;">
-          <div class="sg-temp">Above 30C (86F)</div>
-          <hr style="border:none;border-top:1px solid #4a5568;width:80%;margin:0.3rem auto;">
-          <div class="sg-val" id="sgHotVal">SG 0.778</div>
+          <div class="sg-left">
+            <div class="sg-label" style="margin-left:-2px;">Hot</div>
+          </div>
+          <div class="sg-right">
+            <div class="sg-temp">> 30C (86F)</div>
+            <div class="sg-val" id="sgHotVal">SG 0.778</div>
+          </div>
         </button>
       </div>
     </div>
@@ -162,9 +173,10 @@
   </div>
 
   <p class="note">
-    Density = SG x 1 kg/L &nbsp; 1 lb = 0.453592 kg<br>
-    Results are approximate -- verify with flight manual data.
+    Liters = (Pounds x 0.454) ÷ SG
   </p>
+
+  <button onclick="clearValues()" style="display:block;margin:1.25rem auto 0;background:#0d0f14;border:1px solid #2e3a4a;color:var(--muted);font-family:var(--mono);font-size:1.2rem;font-weight:700;letter-spacing:0.08em;padding:0.75rem 2rem;border-radius:16px;cursor:pointer;width:100%;max-width:420px;">RESET</button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
   <script>
@@ -221,13 +233,13 @@
       document.getElementById('targetRow').className = overLimit ? 'input-row over-limit' : 'input-row';
       document.getElementById('targetWarning').style.display = (overLimit && !isFinite(onboard)) ? 'block' : 'none';
 
-      // Highlight onboard field red if onboard alone exceeds max
+      // Highlight onboard field red if combined total exceeds max
+      var combinedOver = isFinite(target) && isFinite(onboard) && (target + onboard) > MAX_FUEL && !overLimit;
       var onboardOver = isFinite(onboard) && onboard > MAX_FUEL;
-      document.getElementById('onboardRow').className = onboardOver ? 'input-row over-limit' : 'input-row';
-      document.getElementById('onboardWarning').style.display = onboardOver ? 'block' : 'none';
-
-      // If target is over max (regardless of onboard), flag it
-      if (overLimit) document.getElementById('targetRow').className = 'input-row over-limit';
+      document.getElementById('onboardRow').className = (combinedOver || onboardOver) ? 'input-row over-limit' : 'input-row';
+      document.getElementById('onboardWarning').textContent = 'COMBINED TOTAL EXCEEDS MAX FUEL OF (20,000 LBS)';
+      document.getElementById('onboardWarning').style.display = (combinedOver || onboardOver) ? 'block' : 'none';
+      if (combinedOver || onboardOver) document.getElementById('targetRow').className = 'input-row over-limit';
 
       // Check if target exceeds max fuel
       if (overLimit) {
@@ -241,11 +253,11 @@
         return;
       }
 
-      // Check if onboard alone exceeds max fuel
-      if (onboardOver) {
-        var over2 = Math.ceil(onboard - MAX_FUEL);
+      // Check if combined or onboard alone exceeds max fuel
+      if (combinedOver || onboardOver) {
+        var over2 = combinedOver ? Math.ceil((target + onboard) - MAX_FUEL) : Math.ceil(onboard - MAX_FUEL);
         lbsBox.className = 'result-box negative';
-        lbsLabel.textContent = 'Exceeds Max Fuel Of (20,000 LBS) By';
+        lbsLabel.textContent = 'Combined Total Exceeds Max Fuel Of (20,000 LBS) By';
         addLbs.textContent = '+' + over2.toLocaleString('en-US');
         document.getElementById('lbsUnit').textContent = over2 === 1 ? 'LB' : 'LBS';
         liters.textContent = '--';
@@ -264,8 +276,21 @@
       }
 
       var delta = target - onboard;
-      lbsBox.className = 'result-box' + (delta < 0 ? ' negative' : '');
-      lbsLabel.textContent = delta < 0 ? 'Over by' : 'Uplift in Pounds';
+      if (delta < 0) {
+        lbsBox.className = 'result-box negative';
+        lbsLabel.textContent = 'On Board Exceeds Total Needed';
+        addLbs.textContent = '--';
+        document.getElementById('lbsUnit').textContent = 'LBS';
+        document.getElementById('onboardRow').className = 'input-row over-limit';
+        document.getElementById('onboardWarning').textContent = 'EXCEEDS TOTAL FUEL NEEDED';
+        document.getElementById('onboardWarning').style.display = 'block';
+        liters.textContent = '--';
+        gallons.textContent = '--';
+        return;
+      }
+      lbsBox.className = 'result-box';
+      lbsLabel.textContent = 'Uplift in Pounds';
+      document.getElementById('lbsUnit').textContent = 'LBS';
       addLbs.textContent = fmt(Math.abs(delta));
 
       if (delta > 0) {
@@ -277,6 +302,30 @@
         gallons.textContent = delta === 0 ? '0' : '--';
       }
     }
+    function clearValues() {
+      document.getElementById('target').value = '';
+      document.getElementById('onboard').value = '';
+      document.getElementById('targetRow').className = 'input-row';
+      document.getElementById('onboardRow').className = 'input-row';
+      document.getElementById('targetWarning').style.display = 'none';
+      document.getElementById('onboardWarning').style.display = 'none';
+      document.getElementById('lbsBox').className = 'result-box';
+      document.getElementById('lbsLabel').textContent = 'Uplift in Pounds';
+      document.getElementById('addLbs').textContent = '--';
+      document.getElementById('lbsUnit').textContent = 'LBS';
+      document.getElementById('upliftLiters').textContent = '--';
+      document.getElementById('upliftGallons').textContent = '--';
+    }
+
+    Sortable.create(document.getElementById('sgContainer'), {
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      chosenClass: 'sortable-chosen',
+      delay: 400,
+      delayOnTouchOnly: true,
+      touchStartThreshold: 5
+    });
+
     Sortable.create(document.getElementById('resultContainer'), {
       animation: 150,
       ghostClass: 'sortable-ghost',
