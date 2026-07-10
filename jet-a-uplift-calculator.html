@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Jet-A Calc">
@@ -20,7 +20,7 @@
       --mono: 'Share Tech Mono', monospace; --sans: 'Inter', sans-serif;
     }
     html, body { overflow-x: hidden; }
-    body { background: var(--bg); color: var(--text); font-family: var(--sans); display: block; padding: 2rem 1rem 9rem; text-align: center; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); display: block; padding: 2rem 1rem calc(9rem + env(safe-area-inset-bottom)); text-align: center; }
     .runway { display: flex; gap: 6px; justify-content: center; margin-bottom: 2.5rem; margin-top: 1rem; }
     .runway span { display: block; width: 32px; height: 4px; background: var(--accent); opacity: 0.85; border-radius: 2px; }
     .runway span:nth-child(even) { opacity: 0.3; }
@@ -167,7 +167,11 @@
 
   <p class="note" style="text-align:center;"><span style="display:inline-block;text-align:left;"><span style="display:block;font-size:1rem;font-weight:600;letter-spacing:0.05em;color:var(--muted);">FORMULA</span><span style="display:block;">Liters = (Pounds x 0.454) ÷ SG</span></span></p>
 
-  <button onclick="clearValues()" style="display:block;margin:1.25rem auto 0;background:#0d0f14;border:1px solid #2e3a4a;color:var(--muted);font-family:var(--mono);font-size:1.2rem;font-weight:700;letter-spacing:0.08em;padding:0.75rem 2rem;border-radius:16px;cursor:pointer;width:100%;max-width:420px;">RESET</button>
+  <button onclick="clearValues()" style="display:block;margin:1.25rem auto 0;background:#0d0f14;border:1px solid #2e3a4a;color:var(--muted);font-family:var(--mono);font-size:1.2rem;font-weight:700;letter-spacing:0.08em;padding:0.75rem 2rem;border-radius:16px;cursor:pointer;width:100%;max-width:420px;transition:all 0.15s;" 
+    onmousedown="this.style.background='#1c1608';this.style.borderColor='var(--accent)';this.style.color='var(--accent)';"
+    onmouseup="this.style.background='#0d0f14';this.style.borderColor='#2e3a4a';this.style.color='var(--muted)';"
+    ontouchstart="this.style.background='#1c1608';this.style.borderColor='var(--accent)';this.style.color='var(--accent)';"
+    ontouchend="this.style.background='#0d0f14';this.style.borderColor='#2e3a4a';this.style.color='var(--muted)';">RESET</button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
   <script>
