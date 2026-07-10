@@ -47,6 +47,7 @@
     .sg-btn .sg-val { font-size: 1.2rem; text-align: center; }
     .divider { border: none; border-top: 1px solid #4a5a6a; margin: 1.75rem 0; }
     .input-row { display: flex; align-items: stretch; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; transition: border-color 0.15s; }
+    .input-row.over-limit { border-color: var(--red); background: #1e0d0d; }
     .input-row input[type="number"] { flex: 1; background: #0d0f14; border: none; outline: none; font-family: var(--mono); font-size: 1.8rem; color: #fff; padding: 0.85rem 1rem; -moz-appearance: textfield; }
     .input-row input::-webkit-outer-spin-button,
     .input-row input::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -124,6 +125,7 @@
         <input type="number" id="target" placeholder="0" min="0" step="any" oninput="calcPlan()" />
         <div class="unit-badge">LBS</div>
       </div>
+      <div id="targetWarning" style="display:none;color:var(--red);font-size:0.85rem;font-weight:600;margin-top:0.35rem;letter-spacing:0.05em;">EXCEEDS MAX FUEL OF 20,000 LBS</div>
     </div>
 
     <div class="field-group">
@@ -208,6 +210,8 @@
       return rounded.toLocaleString('en-US');
     }
 
+    var MAX_FUEL = 20000;
+
     function calcPlan() {
       var target  = parseFloat(document.getElementById('target').value);
       var onboard = parseFloat(document.getElementById('onboard').value);
@@ -216,6 +220,21 @@
       var addLbs   = document.getElementById('addLbs');
       var liters   = document.getElementById('upliftLiters');
       var gallons  = document.getElementById('upliftGallons');
+
+      // Check target field against max fuel
+      var overLimit = isFinite(target) && target > MAX_FUEL;
+      document.getElementById('targetRow').className = overLimit ? 'input-row over-limit' : 'input-row';
+      document.getElementById('targetWarning').style.display = overLimit ? 'block' : 'none';
+
+      if (overLimit) {
+        lbsBox.className = 'result-box negative';
+        lbsLabel.textContent = 'Exceeds Max Fuel Of 20,000 LBS By';
+        addLbs.textContent = '+' + Math.ceil(target - MAX_FUEL).toLocaleString('en-US');
+        document.getElementById('lbsUnit').textContent = Math.ceil(target - MAX_FUEL) === 1 ? 'LB' : 'LBS';
+        liters.textContent = '--';
+        gallons.textContent = '--';
+        return;
+      }
 
       if (!isFinite(target) || !isFinite(onboard) || target < 0 || onboard < 0) {
         lbsBox.className = 'result-box';
@@ -244,6 +263,8 @@
     function clearValues() {
       document.getElementById('target').value = '';
       document.getElementById('onboard').value = '';
+      document.getElementById('targetRow').className = 'input-row';
+      document.getElementById('targetWarning').style.display = 'none';
       document.getElementById('lbsBox').className = 'result-box';
       document.getElementById('lbsLabel').textContent = 'Uplift in Pounds';
       document.getElementById('addLbs').textContent = '--';
